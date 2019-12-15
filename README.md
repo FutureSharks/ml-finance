@@ -25,3 +25,11 @@ Location: [examples/deep-q-learning-simulated](examples/deep-q-learning-simulate
 ### Example 1: Deep Q Learning with 3 stocks
 
 Location: [examples/deep-q-learning-3-stocks](examples/deep-q-learning-3-stocks)
+
+### Example 2: LSTM model with FOREX data
+
+Location: [examples/supervised-lstm-forex](examples/supervised-lstm-forex)
+
+### Example 3: Time Series Forecasting with LSTM
+
+Location: [examples/time-series-forcasting-lstm](examples/time-series-forcasting-lstm)
