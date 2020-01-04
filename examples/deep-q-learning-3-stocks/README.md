@@ -18,11 +18,11 @@ Open the [Jupyter Notebook](deep-q-learning-agent.ipynb)
 ## Issues
 
 - The environment is too simplistic with buying a single stock and selling all stocks
-- Add short selling option
+- No short selling option
 - Can't use current bar close price for buying. A price from the next bar must be used.
 
 ## Sources
 
 https://github.com/ShuaiW/teach-machine-to-trade
 
-https://github.com/llSourcell/Q-Learning-for-Tradi
+https://github.com/llSourcell/Q-Learning-for-Trading

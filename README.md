@@ -18,7 +18,7 @@ All data is included in the examples or is from [financial-data](https://github.
 
 ## 📖 Examples
 
-### Example 0: Deep Q Learning simulated prices
+### Example 0: Deep Q Learning simulated price data
 
 Location: [examples/deep-q-learning-simulated](examples/deep-q-learning-simulated)
 
@@ -30,6 +30,18 @@ Location: [examples/deep-q-learning-3-stocks](examples/deep-q-learning-3-stocks)
 
 Location: [examples/lstm-forex](examples/lstm-forex)
 
-### Example 3: Time Series Forecasting with LSTM
+### Example 3: LSTM model with simulated price data
+
+Location: [examples/lstm-simulated](examples/lstm-simulated)
+
+### Example 4: Time Series Forecasting with LSTM
 
 Location: [examples/time-series-forcasting-lstm](examples/time-series-forcasting-lstm)
+
+### Example 5: PPO2 and MLP trading AAPL stock
+
+Location: [examples/ppo2-ml-appl](examples/ppo2-ml-appl)
+
+### Example 6: Random Forest with S&P500
+
+Location: [examples/random-forest-sp500](erandom-forest-sp500)
