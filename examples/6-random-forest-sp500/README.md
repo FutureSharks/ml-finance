@@ -5,7 +5,3 @@ This example uses a random forest classifier to predict the stock price directio
 ## Run
 
 Open the [Jupyter Notebook](run.ipynb)
-
-## Issues
-
-- Results of trades look too good to be true
