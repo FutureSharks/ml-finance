@@ -67,7 +67,7 @@ def get_trade_statistics(trades):
     print('Median position length: {0}'.format(stats['median_position_length']))
     print('Number of trades: {0}'.format(stats['trades']))
 
-def show_positions_on_price_plot(positions, extra_y_series=None, columns_to_keep=[]):
+def show_positions_on_price_plot(positions, extra_y_series=None, columns_to_keep=[], figsize=(16,6)):
     '''
     Creates a plot showing positions as coloured bands with price
 
@@ -81,13 +81,10 @@ def show_positions_on_price_plot(positions, extra_y_series=None, columns_to_keep
     positions_to_plot = positions.copy()
 
     for column in positions_to_plot.columns:
-        if column != 'price' and column not in columns_to_keep and column != extra_y_series:
+        if column != 'price' and column not in columns_to_keep:
             positions_to_plot.drop(column, 1, inplace=True)
 
-    if extra_y_series:
-        ax = positions_to_plot.plot(secondary_y=extra_y_series)
-    else:
-        ax = positions_to_plot.plot()
+    ax = positions_to_plot.plot(figsize=figsize)
     ymax = positions_to_plot['price'].max()
     ymin = positions_to_plot['price'].min()
 
@@ -99,7 +96,7 @@ def show_positions_on_price_plot(positions, extra_y_series=None, columns_to_keep
     for group in position_groups:
         enter_loc = non_zero_positions.loc[non_zero_positions['position_group'] == group].index[0]
         exit_loc = non_zero_positions.loc[non_zero_positions['position_group'] == group].index[-1]
-        position = non_zero_positions.loc[non_zero_positions['position_group'] == group]['position'][0]
+        position = non_zero_positions.loc[non_zero_positions['position_group'] == group]['position'].values[0]
 
         if position == 1:
             color = '#72a8ff'

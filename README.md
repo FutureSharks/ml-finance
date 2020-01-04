@@ -42,6 +42,9 @@ Location: [4-time-series-forcasting-lstm](examples/4-time-series-forcasting-lstm
 
 Location: [5-ppo2-ml-appl](examples/5-ppo2-ml-appl)
 
-### Example 6: Random Forest with S&P500
+### Example 6: Random Forest Classifier to prediction direction of DAX 30
+
+Location: [6-random-forest-dax30](examples/6-random-forest-dax30)
+
 
 Location: [6-random-forest-sp500](examples/6-random-forest-sp500)
