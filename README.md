@@ -46,5 +46,6 @@ Location: [5-ppo2-ml-appl](examples/5-ppo2-ml-appl)
 
 Location: [6-random-forest-dax30](examples/6-random-forest-dax30)
 
+### Example 7: Random Forest Classifier with simulated price data
 
-Location: [6-random-forest-sp500](examples/6-random-forest-sp500)
+Location: [7-random-forest-simulated](examples/7-random-forest-simulated)
