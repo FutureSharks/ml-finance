@@ -5,48 +5,55 @@ import numpy as np
 import itertools
 
 
-class TradingEnv(gym.Env):
+class SimpleTradingEnvironment(gym.Env):
     """
-    A 3-stock (MSFT, IBM, QCOM) trading environment.
+    A simple trading environment:
+        - No complexity about position sizing based on account balance
+        - Just takes short or long positions
+        - Reward is simply enter and exit price difference
 
-    State: [# of stock owned, current stock prices, cash in hand]
-        - array of length n_stock * 2 + 1
-        - price is discretized (to integer) to reduce state space
-        - use close price for each stock
-        - cash in hand is evaluated at each step based on action performed
+    Arguments:
+        price_data: A pandas DataFrame of pricing data.
 
-    Action: sell (0), hold (1), and buy (2)
-        - when selling, sell all the shares
-        - when buying, buy as many as cash in hand allows
-        - if buying multiple stock, equally distribute cash in hand and then utilize the balance
+        price_column_name: The name of the column containing the prices in the
+            pandas DataFrame
+
+        environment_columns: Names of any extra columns to include in the
+            environment, for example technical indicators.
+
+    Action:
+        0: Short
+        1: Hold
+        2: Long
     """
-    def __init__(self, train_data, init_invest=20000):
-        # data
-        self.stock_price_history = np.around(train_data) # round up to integer to reduce state space
-        self.n_stock, self.n_step = self.stock_price_history.shape
+    def __init__(self, price_data, price_column_name='price', environment_columns=[]):
+        self.price_data = price_data
+        self.price_column_name = price_column_name
+        self.environment_columns = list(set(environment_columns + [self.price_column_name]))
+        self.n_step = len(self.price_data)
 
         # instance attributes
-        self.init_invest = init_invest
-        self.cur_step = None
-        self.stock_owned = None
-        self.stock_price = None
-        self.cash_in_hand = None
+        self.current_position = 1
+        self.current_price = 0
+        self.enter_price = 0
 
-        # Trading statistics
+        ## Trading statistics
+        # number of completed trades
         self.trade_count = 0
+        # Number of profitable completed trades
         self.trades_profitable = 0
-        self.current_value = 0
-        self.book_cost = [0] * self.n_stock
+        # Balance from completed trades
+        self.account_balance = 0
+        # Balance from completed and open trades
+        self.account_balance_unrealised = 0
 
         # action space
-        self.action_space = spaces.Discrete(3**self.n_stock)
+        self.action_space = spaces.Discrete(3)
 
         # observation space: give estimates in order to sample and build scaler
-        stock_max_price = self.stock_price_history.max(axis=1)
-        stock_range = [[0, init_invest * 2 // mx] for mx in stock_max_price]
-        price_range = [[0, mx] for mx in stock_max_price]
-        cash_in_hand_range = [[0, init_invest * 2]]
-        self.observation_space = spaces.MultiDiscrete(stock_range + price_range + cash_in_hand_range)
+        data_max = np.array(self.price_data[self.environment_columns].max())
+        price_range = [[0, i] for i in data_max]
+        self.observation_space = spaces.MultiDiscrete(data_max + price_range)
 
         # seed and start
         self._seed()
@@ -56,10 +63,16 @@ class TradingEnv(gym.Env):
         '''
         Returns a dict of trading statistics
         '''
+        if self.trade_count == 0:
+            win_loss_ratio = 0
+        else:
+            win_loss_ratio = self.trades_profitable / self.trade_count
+
         return {
             'trade_count': self.trade_count,
-            'win_loss_ratio': self.trades_profitable / self.trade_count,
-            'value': self.current_value,
+            'win_loss_ratio': win_loss_ratio,
+            'account_balance': self.account_balance,
+            'unrealised_pl': self._get_unrealised_pl(),
         }
 
     def _seed(self, seed=None):
@@ -67,72 +80,78 @@ class TradingEnv(gym.Env):
         return [seed]
 
     def _reset(self):
-        self.cur_step = 0
-        self.stock_owned = [0] * self.n_stock
-        self.stock_price = self.stock_price_history[:, self.cur_step]
-        self.cash_in_hand = self.init_invest
         self.trade_count = 0
         self.trades_profitable = 0
-        self.current_value = 0
-        self.book_cost = [0] * self.n_stock
-        return self._get_obs()
+        self.account_balance = 0
+        self.account_balance_unrealised = 0
+        self.current_step = 0
+        self.current_position = 1
+        self.current_price = 0
+        self.enter_price = 0
+        self.stock_price = self.price_data[self.price_column_name][self.current_step]
+        self.current_position = 1
+        self.enter_price = 0
+        return self._get_observations()
 
     def _step(self, action):
         assert self.action_space.contains(action)
-        prev_val = self._get_val()
-        self.cur_step += 1
-        self.stock_price = self.stock_price_history[:, self.cur_step] # update price
+        previous_pl = self._get_unrealised_pl()
+        self.current_step += 1
+        self.current_price = self.price_data[self.price_column_name][self.current_step]
         self._trade(action)
-        cur_val = self._get_val()
-        reward = cur_val - prev_val
-        done = self.cur_step == self.n_step - 1
-        self.current_value = cur_val
-        return self._get_obs(), reward, done
+        self.account_balance_unrealised = self._get_unrealised_pl()
+        reward = self.account_balance_unrealised - previous_pl
+        done = self.current_step == len(self.price_data) - 1
+        return self._get_observations(), reward, done
 
-    def _get_obs(self):
-        obs = []
-        obs.extend(self.stock_owned)
-        obs.extend(list(self.stock_price))
-        obs.append(self.cash_in_hand)
-        return obs
+    def _get_observations(self):
+        observations = []
+        observations.append(self.current_position)
+        observations.append(self.account_balance_unrealised)
+        observations.extend(self.price_data[self.environment_columns].iloc[self.current_step].values)
+        return observations
 
-
-    def _get_val(self):
-        return np.sum(self.stock_owned * self.stock_price) + self.cash_in_hand
+    def _get_unrealised_pl(self):
+        '''
+        Calculates the current unrealised profit and loss.
+        This is the unrealised P&L from an open position + the current account balance
+        '''
+        return ((self.current_price - self.enter_price) * (self.current_position - 1)) + self.account_balance
 
     def _trade(self, action):
-        # all combo to sell(0), hold(1), or buy(2) stocks
-        action_combo = list(map(list, itertools.product([0, 1, 2], repeat=self.n_stock)))
-        action_vec = action_combo[action]
+        '''
+        Performs trades based on action:
+            0: Short
+            1: Hold
+            2: Long
+        '''
+        # Nothing to do if action is the same as current position
+        if self.current_position == action:
+            pass
 
-        # one pass to get sell/buy index
-        sell_index = []
-        buy_index = []
-        for i, a in enumerate(action_vec):
-            if a == 0:
-                sell_index.append(i)
-            elif a == 2:
-                buy_index.append(i)
+        # Opening a new trade from hold
+        elif self.current_position == 1:
+            self.enter_price = self.current_price
+            self.current_position = action
 
-        # two passes: sell first, then buy; might be naive in real-world settings
-        if sell_index:
-            for i in sell_index:
-                if self.stock_owned[i] > 0:
-                    self.trade_count += 1
-                    sell_amount = self.stock_price[i] * self.stock_owned[i]
-                    if sell_amount > self.book_cost[i]:
-                        self.trades_profitable += 1
-                    self.cash_in_hand += sell_amount
-                    self.stock_owned[i] = 0
-                    self.book_cost[i] = 0
+        # Closing or switching position
+        elif self.current_position in [0, 2]:
+            assert self.enter_price is not 0
+            profit = (self.current_price - self.enter_price) * (self.current_position - 1)
+            self.account_balance += profit
+            if profit > 0:
+                self.trades_profitable += 1
 
-        if buy_index:
-            can_buy = True
-            while can_buy:
-                for i in buy_index:
-                    if self.cash_in_hand > self.stock_price[i]:
-                        self.stock_owned[i] += 1 # buy one share
-                        self.cash_in_hand -= self.stock_price[i]
-                        self.book_cost[i] += self.stock_price[i] * 1
-                    else:
-                        can_buy = False
+            # Closing a position
+            if action == 1:
+                self.enter_price = 0
+                self.trade_count += 1
+            # Open new position
+            else:
+                self.enter_price = self.current_price
+
+            self.current_position = action
+        else:
+            raise Exception('Unknown trade situation')
+
+        return

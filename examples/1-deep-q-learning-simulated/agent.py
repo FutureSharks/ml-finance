@@ -4,7 +4,6 @@ import numpy as np
 from model import mlp
 
 
-
 class DQNAgent(object):
     """
     A simple Deep Q agent
