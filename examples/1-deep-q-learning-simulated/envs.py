@@ -56,9 +56,14 @@ class TradingEnv(gym.Env):
         '''
         Returns a dict of trading statistics
         '''
+        if self.trade_count == 0:
+            win_loss_ratio = 0
+        else:
+            win_loss_ratio = self.trades_profitable / self.trade_count
+
         return {
             'trade_count': self.trade_count,
-            'win_loss_ratio': self.trades_profitable / self.trade_count,
+            'win_loss_ratio': win_loss_ratio,
             'value': self.current_value,
         }
 
