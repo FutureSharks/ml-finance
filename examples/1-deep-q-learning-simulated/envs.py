@@ -18,18 +18,18 @@ class SimpleTradingEnvironment(gym.Env):
         price_column_name: The name of the column containing the prices in the
             pandas DataFrame
 
-        environment_columns: Names of any extra columns to include in the
-            environment, for example technical indicators.
+        environment_columns: Names of columns to include in the
+            environment, for example technical indicators and the price column.
 
     Action:
         0: Short
         1: Hold
         2: Long
     """
-    def __init__(self, price_data, price_column_name='price', environment_columns=[]):
+    def __init__(self, price_data, environment_columns, price_column_name='price'):
         self.price_data = price_data
         self.price_column_name = price_column_name
-        self.environment_columns = list(set(environment_columns + [self.price_column_name]))
+        self.environment_columns = environment_columns
         self.n_step = len(self.price_data)
 
         # instance attributes
@@ -51,9 +51,10 @@ class SimpleTradingEnvironment(gym.Env):
         self.action_space = spaces.Discrete(3)
 
         # observation space: give estimates in order to sample and build scaler
-        data_max = np.array(self.price_data[self.environment_columns].max())
-        price_range = [[0, i] for i in data_max]
-        self.observation_space = spaces.MultiDiscrete(data_max + price_range)
+        data_max = self.price_data[self.environment_columns].max().tolist()
+        data_range = [[0, i] for i in data_max]
+        position_range = [[0, 2]]
+        self.observation_space = spaces.MultiDiscrete([data_max] + data_range + position_range)
 
         # seed and start
         self._seed()
@@ -89,7 +90,6 @@ class SimpleTradingEnvironment(gym.Env):
         self.current_price = 0
         self.enter_price = 0
         self.stock_price = self.price_data[self.price_column_name][self.current_step]
-        self.current_position = 1
         self.enter_price = 0
         return self._get_observations()
 
@@ -106,8 +106,11 @@ class SimpleTradingEnvironment(gym.Env):
 
     def _get_observations(self):
         observations = []
+        # Current position
         observations.append(self.current_position)
+        # Account balance unrealised
         observations.append(self.account_balance_unrealised)
+        # Price and environment columns
         observations.extend(self.price_data[self.environment_columns].iloc[self.current_step].values)
         return observations
 
