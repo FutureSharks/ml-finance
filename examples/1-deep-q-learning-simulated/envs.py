@@ -95,12 +95,12 @@ class SimpleTradingEnvironment(gym.Env):
 
     def _step(self, action):
         assert self.action_space.contains(action)
-        previous_pl = self._get_unrealised_pl()
+        previous_balance = self.account_balance
         self.current_step += 1
         self.current_price = self.price_data[self.price_column_name][self.current_step]
         self._trade(action)
         self.account_balance_unrealised = self._get_unrealised_pl()
-        reward = self.account_balance_unrealised - previous_pl
+        reward = self.account_balance - previous_balance
         done = self.current_step == len(self.price_data) - 1
         return self._get_observations(), reward, done
 
