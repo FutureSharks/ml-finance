@@ -8,4 +8,4 @@ Open the [Jupyter Notebook](lstm-simulated.ipynb)
 
 ## Sources
 
-- https://machinelearningmastery.com/time-series-forecasting-long-short-term-memory-network-python/
+[Example 2: LSTM model with FOREX data](../2-lstm-forex)

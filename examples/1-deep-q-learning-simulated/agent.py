@@ -1,4 +1,5 @@
 from collections import deque
+from keras.models import load_model
 import random
 import numpy as np
 from model import mlp
@@ -55,7 +56,7 @@ class DQNAgent(object):
 
 
     def load(self, name):
-        self.model.load_model(name)
+        self.model = load_model(name)
 
     def save(self, name):
         self.model.save(name)

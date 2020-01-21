@@ -4,6 +4,7 @@
 - Create issues in repos pointing to this one
 - Does example 5 do a test?
 - Test example 5 with simulated prices
-- Save all models
 - Don't use scaler in function for example 2 and 3
 - Use virtualenvs
+- Find nice example of reinforcement using pytorch
+- https://github.com/tomgrek/RL-stocktrading/blob/master/Finance%20final.ipynb
