@@ -2,7 +2,6 @@
 
 - Consider changes here: https://github.com/llSourcell/Q-Learning-for-Trading/issues/2
 - Create issues in repos pointing to this one
-- Does example 5 do a test?
 - Test example 5 with simulated prices
 - Don't use scaler in function for example 2 and 3
 - Use virtualenvs

@@ -19,6 +19,7 @@ pip3 install stable-baselines[mpi]
 
 ## Issues
 
+- Is the model even tested in this example?
 - Surely the stock price split breaks something here
 
 ## Sources
