@@ -1,4 +1,6 @@
-# Deep Q Learning with 3 stocks
+# Deep Q Learning with simulated price data
+
+This example uses predictable prices generated from a sine wave. This is to ensure the model actually works. The RSI was added as a feature to help the model predict when to buy and sell.
 
 - `agent.py`: a Deep Q learning agent
 - `envs.py`: a simple trading environment
@@ -14,10 +16,6 @@ Open the [Jupyter Notebook](deep-q-learning-agent-simulated-prices.ipynb)
 
 `pip3 install -r requirements.txt`
 
-## Issues
-
-- Why doesn't the model always win with repeating and predictable data?
-
 ## Sources
 
-[Example 1: Deep Q Learning with 3 stocks](../deep-q-learning-3-stocks)
+[Example 0: Deep Q Learning with 3 stocks](../0-deep-q-learning-3-stocks)

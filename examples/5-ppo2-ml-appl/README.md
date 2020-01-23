@@ -17,6 +17,11 @@ brew install cmake openmpi
 pip3 install stable-baselines[mpi]
 ```
 
+## Issues
+
+- Is the model even tested in this example?
+- Surely the stock price split breaks something here
+
 ## Sources
 
 - https://medium.com/@adamjking3/creating-a-custom-openai-gym-environment-for-stock-trading-be532be3910e
