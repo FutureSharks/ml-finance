@@ -24,7 +24,7 @@ Location: [0-deep-q-learning-3-stocks](examples/0-deep-q-learning-3-stocks)
 
 ### Example 1: Deep Q Learning simulated price data
 
-Location: [0-deep-q-learning-simulated](examples/1-deep-q-learning-simulated)
+Location: [1-deep-q-learning-simulated](examples/1-deep-q-learning-simulated)
 
 ### Example 2: LSTM model with FOREX data
 
