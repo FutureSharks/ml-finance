@@ -26,7 +26,8 @@ class SimpleTradingEnvironment(gym.Env):
         1: Hold
         2: Long
     """
-    def __init__(self, price_data, environment_columns, price_column_name='price'):
+    def __init__(self, price_data, environment_columns, price_column_name='price', debug=False):
+        self.debug = debug
         self.price_data = price_data
         self.price_column_name = price_column_name
         self.environment_columns = environment_columns
@@ -130,30 +131,45 @@ class SimpleTradingEnvironment(gym.Env):
         '''
         # Nothing to do if action is the same as current position
         if self.current_position == action:
-            pass
+            if self.debug:
+                print('No change for action: {0}'.format(action))
+            return
 
         # Opening a new trade from hold
-        elif self.current_position == 1:
+        elif self.current_position == 1 and action in [0, 2]:
+            if self.debug:
+                print('Opening a trade, position: {0}, price: {1}, step: {2}'.format(action, self.current_price, self.current_step))
             self.enter_price = self.current_price
             self.current_position = action
+            return
 
-        # Closing or switching position
+        # Closing a trade
         elif self.current_position in [0, 2]:
             assert self.enter_price is not 0
+
             profit = (self.current_price - self.enter_price) * (self.current_position - 1)
             self.account_balance += profit
+
             if profit > 0:
                 self.trades_profitable += 1
 
-            # Closing a position
-            if action == 1:
-                self.enter_price = 0
-                self.trade_count += 1
-            # Open new position
-            else:
-                self.enter_price = self.current_price
+            if self.debug:
+                print('Closing a trade, position: {0}, price: {1} at step: {2}, profit: {3}'.format(action, self.current_price, self.current_step, profit))
 
             self.current_position = action
+            self.enter_price = 0
+            self.trade_count += 1
+
+            # Switching position to new one
+            if action != 1:
+                if self.debug:
+                    print('Opening a trade, position: {0}, price: {1}, step: {2}'.format(action, self.current_price, self.current_step))
+                self.enter_price = self.current_price
+                self.current_position = action
+                return
+
+            return
+
         else:
             raise Exception('Unknown trade situation')
 
