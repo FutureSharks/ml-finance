@@ -7,3 +7,4 @@
 - Use virtualenvs
 - Find nice example of reinforcement using pytorch
 - https://github.com/tomgrek/RL-stocktrading/blob/master/Finance%20final.ipynb
+- Test different batch sizes
