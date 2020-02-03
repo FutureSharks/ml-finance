@@ -18,7 +18,7 @@ def get_scaler(env):
     high.append(2)
 
     # Add range for environment columnns
-    low.extend([0] * len(env.environment_columns))
+    low.extend(env.price_data[env.environment_columns].min().tolist())
     high.extend(env.price_data[env.environment_columns].max().tolist())
 
     # Create a fit the scaler

@@ -1,5 +1,7 @@
 # Deep Q Learning with FOREX data
 
+Using RSI technical indicator in agent environment.
+
 - `agent.py`: a Deep Q learning agent
 - `envs.py`: a simple trading environment
 - `model.py`: a multi-layer perceptron as the function approximator

@@ -53,3 +53,7 @@ Location: [7-random-forest-simulated](examples/7-random-forest-simulated)
 ### Example 8: Deep Q Learning with FOREX data
 
 Location: [8-deep-q-forex](examples/8-deep-q-forex)
+
+### Example 9: Deep Q Learning with FOREX more data and technical indicators
+
+Location: [9-deep-q-forex](examples/9-deep-q-forex-more-data)
