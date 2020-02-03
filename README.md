@@ -49,3 +49,7 @@ Location: [6-random-forest-dax30](examples/6-random-forest-dax30)
 ### Example 7: Random Forest Classifier with simulated price data
 
 Location: [7-random-forest-simulated](examples/7-random-forest-simulated)
+
+### Example 8: Deep Q Learning with FOREX data
+
+Location: [8-deep-q-forex](examples/8-deep-q-forex)
