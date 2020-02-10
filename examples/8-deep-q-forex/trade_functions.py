@@ -116,3 +116,31 @@ def show_positions_on_price_plot(positions, extra_y_series=None, columns_to_keep
     plt.title('Positions', size='x-large')
 
     return ax
+
+
+def plot_max_drawdown_distribution(trades, repeat=10000):
+    '''
+    Creates a plot of the distribution of max drawdown value by randomly reordering
+    trades
+    '''
+
+    results = []
+
+    for i in range(repeat):
+        # Calculate running account balance
+        trades['account_balance'] = trades['profit'].cumsum()
+        trades['account_balance_max'] = trades['account_balance'].cummax()
+
+        # Calculate drawdown
+        trades['drawdown'] = trades['account_balance'] - trades['account_balance_max']
+
+        # Save max drawdown
+        results.append(trades['drawdown'].min())
+
+        # Randomly reorder trades for next iteration
+        trades = trades.reindex(np.random.permutation(trades.index))
+        trades.reset_index(drop=True, inplace=True)
+
+    print('Median drawdown: {0}'.format(median(results)))
+
+    return results
