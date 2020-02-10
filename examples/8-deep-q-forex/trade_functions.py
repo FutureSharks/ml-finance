@@ -41,6 +41,7 @@ def create_trades_from_positions(positions, spread=0):
     # Create some columns to calculate stats
     trades['profit'] = ((trades['exit_price'] - trades['enter_price']) * trades['position']) - spread
     trades['profitable'] = trades['profit'] > 0
+    trades['account_balance'] = trades['profit'].cumsum()
 
     return trades
 
