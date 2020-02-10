@@ -29,12 +29,16 @@ class SimpleTradingEnvironment(gym.Env):
     def __init__(self, price_data, environment_columns, price_column_name='price',
             debug=False,
             save_positions_on_df=False,
+            spread=0,
         ):
         self.debug = debug
         self.price_data = price_data
         self.price_column_name = price_column_name
         self.environment_columns = environment_columns
         self.n_step = len(self.price_data)
+
+        # Spread is like a trading fee
+        self.spread = spread
 
         # Whether to save the position directly onto the price_data DataFrame
         self.save_positions_on_df = save_positions_on_df
@@ -156,7 +160,7 @@ class SimpleTradingEnvironment(gym.Env):
         elif self.current_position == 1 and action in [0, 2]:
             if self.debug:
                 print('Opening a trade, position: {0}, step: {1}, price: {2}'.format(action, self.current_step, self.current_price))
-            self.enter_price = self.current_price
+            self.enter_price = self.current_price + ((action - 1) * (self.spread / 2))
             self.current_position = action
             return
 
@@ -181,7 +185,7 @@ class SimpleTradingEnvironment(gym.Env):
             if action != 1:
                 if self.debug:
                     print('Opening a trade, position: {0}, step: {1}, price: {2}'.format(action, self.current_step, self.current_price))
-                self.enter_price = self.current_price
+                self.enter_price = self.current_price + ((action - 1) * (self.spread / 2))
                 self.current_position = action
                 return
 
