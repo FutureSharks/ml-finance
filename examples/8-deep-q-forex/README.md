@@ -10,7 +10,10 @@ Using RSI technical indicator in agent environment.
 
 ## Run
 
-Open the [Jupyter Notebook](run.ipynb)
+- `EUR_USD` with 12h bars: [run.ipynb](run.ipynb)
+- `EUR_USD` with 24h bars: [24h.ipynb](24h.ipynb)
+- `EUR_USD` with 24h bars and 1.5 pip spread: [24h-with-spread.ipynb](24h-with-spread.ipynb)
+- `AUD_JPY` with 12h bars: [aud_jpy.ipynb](aud_jpy.ipynb)
 
 ## Dependencies
 
