@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
+from statistics import median
 
 
 def create_trades_from_positions(positions, spread=0):
@@ -41,6 +43,7 @@ def create_trades_from_positions(positions, spread=0):
     # Create some columns to calculate stats
     trades['profit'] = ((trades['exit_price'] - trades['enter_price']) * trades['position']) - spread
     trades['profitable'] = trades['profit'] > 0
+    trades['account_balance'] = trades['profit'].cumsum()
 
     return trades
 
@@ -68,7 +71,7 @@ def get_trade_statistics(trades):
     print('Profitable: {0}%'.format(round(stats['profitable'] * 100, 2)))
     print('Ratio of long to short positions: {0}'.format(round(stats['ratio_long_short'], 2)))
     print('Median profit: {0}'.format(round(stats['median_profit'], 2)))
-    print('Total profit: {0}'.format(round(stats['total_profit'], 2)))
+    print('Total profit: {0}'.format(stats['total_profit']))
     print('Median position length: {0}'.format(stats['median_position_length']))
     print('Number of trades: {0}'.format(stats['trades']))
 
@@ -115,3 +118,31 @@ def show_positions_on_price_plot(positions, extra_y_series=None, columns_to_keep
     plt.title('Positions', size='x-large')
 
     return ax
+
+
+def plot_max_drawdown_distribution(trades, repeat=10000):
+    '''
+    Creates a plot of the distribution of max drawdown value by randomly reordering
+    trades
+    '''
+
+    results = []
+
+    for i in range(repeat):
+        # Calculate running account balance
+        trades['account_balance'] = trades['profit'].cumsum()
+        trades['account_balance_max'] = trades['account_balance'].cummax()
+
+        # Calculate drawdown
+        trades['drawdown'] = trades['account_balance'] - trades['account_balance_max']
+
+        # Save max drawdown
+        results.append(trades['drawdown'].min())
+
+        # Randomly reorder trades for next iteration
+        trades = trades.reindex(np.random.permutation(trades.index))
+        trades.reset_index(drop=True, inplace=True)
+
+    print('Median drawdown: {0}'.format(median(results)))
+
+    return results

@@ -8,3 +8,5 @@
 - Find nice example of reinforcement using pytorch
 - https://github.com/tomgrek/RL-stocktrading/blob/master/Finance%20final.ipynb
 - Test different batch sizes
+- "We want to incentivize profit that is sustained over long periods of time. At each step, we will set the reward to the account balance multiplied by some fraction of the number of time steps so far."
+- # Set the current step to a random point within the data frame,   self.current_step = random.randint(0, len(self.df.loc[:, 'Open'].values) - 6)

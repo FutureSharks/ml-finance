@@ -105,5 +105,4 @@ venv.bak/
 
 # Saved models
 *.h5
-!trained-model.h5
-!trained_model.h5
+!trained*.h5
