@@ -71,7 +71,7 @@ def get_trade_statistics(trades):
     print('Profitable: {0}%'.format(round(stats['profitable'] * 100, 2)))
     print('Ratio of long to short positions: {0}'.format(round(stats['ratio_long_short'], 2)))
     print('Median profit: {0}'.format(round(stats['median_profit'], 2)))
-    print('Total profit: {0}'.format(stats['total_profit'], 2))
+    print('Total profit: {0}'.format(stats['total_profit']))
     print('Median position length: {0}'.format(stats['median_position_length']))
     print('Number of trades: {0}'.format(stats['trades']))
 
