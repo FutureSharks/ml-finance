@@ -57,3 +57,7 @@ Location: [8-deep-q-forex](examples/8-deep-q-forex)
 ### Example 9: Deep Q Learning with FOREX more data and technical indicators
 
 Location: [9-deep-q-forex-more-data](examples/9-deep-q-forex-more-data)
+
+### Example 10: Deep Q Learning with FOREX fewer technical indicators
+
+Location: [10-deep-q-forex-variations](examples/10-deep-q-forex-variations)
