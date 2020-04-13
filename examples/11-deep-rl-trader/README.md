@@ -1,7 +1,10 @@
 # Deep RL Trader (Duel DQN) Implemented using Keras-RL
 
+**I could not get this example to run**
+
 1. Trading environment(OpenAI Gym) for trading crypto currency  
 2. Duel Deep Q Network  
+
 Agent is implemented using `keras-rl`(https://github.com/keras-rl/keras-rl)     
 
 Agent is expected to learn useful action sequences to maximize profit in a given environment.  
@@ -18,13 +21,25 @@ Reward is given
 * when the position is closed or
 * an episode is finished.  
 
-## Run
-
-Open the [Jupyter Notebook](run.ipynb)
-
 ## Dependencies
 
-`pip3 install -r requirements.txt`
+Install this: `brew install ta-lib`
+
+Create a virtual environment and install requirements:
+
+```
+python3 -m venv env_deep_rl_trader
+source env_deep_rl_trader/bin/activate
+pip3 install -r requirements.txt
+```
+
+Add new virtual environment to jupyter:
+
+```
+python -m ipykernel install --user --name=deep_rl_trader
+```
+
+Open the [Jupyter Notebook](run.ipynb) and select the kernel from above.
 
 ## Sources
 

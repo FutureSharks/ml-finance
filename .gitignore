@@ -106,3 +106,5 @@ venv.bak/
 # Saved models
 *.h5
 !trained*.h5
+
+examples/11-deep-rl-trader/env_deep_rl_trader
