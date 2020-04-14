@@ -1,6 +1,6 @@
 # Deep RL Trader (Duel DQN) Implemented using Keras-RL
 
-**I could not get this example to run**
+**I could not get this example to run due to issues with versions in requirements.txt**
 
 1. Trading environment(OpenAI Gym) for trading crypto currency  
 2. Duel Deep Q Network  
