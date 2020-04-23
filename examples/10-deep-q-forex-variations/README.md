@@ -10,6 +10,7 @@ Technical indicators include:
 
 ## Run
 
+- [6h on EUR_USD](6h-EUR_USD.ipynb)
 - [6h on GBP_USD](6h-GBP_USD.ipynb)
 - [12h on GBP_USD](12h-GBP_USD.ipynb)
 - [Train on 12h EUR_USD, test on 12h GBP_USD](12h-EUR_USD_GBP_USD.ipynb)
