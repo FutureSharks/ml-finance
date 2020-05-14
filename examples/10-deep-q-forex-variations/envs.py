@@ -57,6 +57,12 @@ class SimpleTradingEnvironment(gym.Env):
         self.account_balance = 0
         # Balance from completed and open trades
         self.account_balance_unrealised = 0
+        # Maximum account balance
+        self.account_balance_max = 0
+        # Account drawdown
+        self.account_drawdown = 0
+        # Maximum account drawdown
+        self.account_drawdown_max = 0
 
         # action space
         self.action_space = spaces.Discrete(3)
@@ -85,6 +91,8 @@ class SimpleTradingEnvironment(gym.Env):
             'win_loss_ratio': win_loss_ratio,
             'account_balance': self.account_balance,
             'unrealised_pl': self._get_unrealised_pl(),
+            'account_drawdown': self.account_drawdown,
+            'account_drawdown_max': self.account_drawdown_max,
         }
 
     def _seed(self, seed=None):
@@ -96,6 +104,9 @@ class SimpleTradingEnvironment(gym.Env):
         self.trades_profitable = 0
         self.account_balance = 0
         self.account_balance_unrealised = 0
+        self.account_balance_max = 0
+        self.account_drawdown = 0
+        self.account_drawdown_max = 0
         self.current_step = 0
         self.current_position = 1
         self.current_price = 0
@@ -117,6 +128,10 @@ class SimpleTradingEnvironment(gym.Env):
         self.account_balance_unrealised = self._get_unrealised_pl()
         reward = (self.account_balance - previous_balance) * 1000
         done = self.current_step == len(self.price_data) - 1
+
+        self.account_balance_max = max(self.account_balance_max, self.account_balance)
+        self.account_drawdown = self.account_balance - self.account_balance_max
+        self.account_drawdown_max = min(self.account_drawdown_max, self.account_drawdown)
 
         if self.save_positions_on_df:
             self.price_data.loc[self.price_data.index == self.current_step, ['position']] = action
