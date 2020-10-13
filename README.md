@@ -64,4 +64,4 @@ Location: [10-deep-q-forex-variations](examples/10-deep-q-forex-variations)
 
 ### Example 11: Deep RL Trader (Duel DQN) Implemented using Keras-RL
 
-Location: [11-examples/11-deep-rl-trader](examples/11-examples/11-deep-rl-trader)
+Location: [11-deep-rl-trader](examples/11-deep-rl-trader)
