@@ -3,7 +3,7 @@ numpy==1.16.0
 Keras==2.1.2
 keras-rl==0.4.2
 ipykernel
-tensorflow==1.15.2
+tensorflow==1.15.4
 TA-Lib==0.4.17
 scikit-learn==0.22.2
 gym==0.9.6
